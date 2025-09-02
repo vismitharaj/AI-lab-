@@ -1,0 +1,44 @@
+def display(location, environment):
+    print(f"Vacuum at {location} | Rooms: {environment}")
+
+def reflex_agent(location, environment):
+    if environment[location] == "Dirty":
+        return "Suck"
+    elif location == "A":
+        return "Right"
+    else:
+        return "Left"
+
+def execute(action, location, environment):
+    if action == "Suck":
+        print(f"Suck at {location}")
+        environment[location] = "Clean"
+    elif action == "Right":
+        print("Move Right to B")
+        location = "B"
+    elif action == "Left":
+        print("Move Left to A")
+        location = "A"
+    return location, environment
+
+def run(environment, start_location, steps=6):
+    location = start_location
+    for _ in range(steps):
+        display(location, environment)
+        action = reflex_agent(location, environment)
+        location, environment = execute(action, location, environment)
+    display(location, environment)
+    print("Finished.\n")
+
+
+environments = [
+    {"A": "Dirty", "B": "Dirty"},
+    {"A": "Clean", "B": "Dirty"},
+    {"A": "Dirty", "B": "Clean"},
+    {"A": "Clean", "B": "Clean"},
+]
+
+for env in environments:
+    for start_loc in ["A", "B"]:
+        print(f"Scenario: Start at {start_loc}, Rooms: {env}")
+        run(env.copy(), start_loc, steps=5)
