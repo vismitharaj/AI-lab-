@@ -54,9 +54,31 @@ def ids(start, goal):
             return
     print(" Solution not found within depth limit.")
 
-# ---------------- MAIN ----------------
 start_puzzle = get_puzzle("start")
 goal_puzzle = get_puzzle("goal")
 
 print("\n~~~~~~~~~~~~ IDDFS ~~~~~~~~~~~~")
 ids(start_puzzle, goal_puzzle)
+
+OUTPUT:
+Enter the start puzzle (3x3, use -1 for blank):
+Row 1 (space-separated 3 numbers): 1 -1 7
+Row 2 (space-separated 3 numbers): 2 8 6
+Row 3 (space-separated 3 numbers): 3 4 5
+
+Enter the goal puzzle (3x3, use -1 for blank):
+Row 1 (space-separated 3 numbers): 1 8 7
+Row 2 (space-separated 3 numbers): 2 4 6
+Row 3 (space-separated 3 numbers): 3 -1 5
+
+~~~~~~~~~~~~ IDDFS ~~~~~~~~~~~~
+
+Trying depth limit = 1
+
+Trying depth limit = 2
+\Solution found!
+[[1, -1, 7], [2, 8, 6], [3, 4, 5]]
+[[1, 8, 7], [2, -1, 6], [3, 4, 5]]
+[[1, 8, 7], [2, 4, 6], [3, -1, 5]]
+Moves: ['down', 'down']
+Path cost = 2
