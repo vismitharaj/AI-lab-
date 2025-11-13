@@ -1,0 +1,96 @@
+
+tree = {
+    'A': 10, 'B': 11, 'C': 9,  'D': 12,
+    'E': 14, 'F': 15, 'G': 13, 'H': 14,
+    'I': 5,  'J': 2,  'K': 4,  'L': 1,
+    'M': 3,  'N': 22, 'O': 20, 'P': 21
+}
+
+tree_structure = [
+    ['A', 'B', 'C', 'D'],  # 1st MIN node
+    ['E', 'F', 'G', 'H'],  # 2nd MIN node
+    ['I', 'J', 'K', 'L'],  # 3rd MIN node
+    ['M', 'N', 'O', 'P']   # 4th MIN node
+]
+pruned_nodes = []
+
+def alpha_beta_min(values, alpha, beta):
+    """MIN level"""
+    min_val = float('inf')
+    for name in values:
+        val = tree[name]
+        print(f"    MIN checks {name}={val}, α={alpha}, β={beta}")
+        if val < min_val:
+            min_val = val
+        if min_val <= alpha:
+            # prune remaining nodes
+            pruned_nodes.extend(values[values.index(name)+1:])
+            print(f"    Pruning at MIN node after {name}: {values[values.index(name)+1:]}")
+            break
+        beta = min(beta, min_val)
+    print(f"    → MIN returns {min_val}")
+    return min_val
+
+def alpha_beta_max(structure, alpha, beta):
+    max_val = float('-inf')
+    best_branch = None
+    for group in structure:
+        print(f"\nExploring branch: {group}")
+        val = alpha_beta_min(group, alpha, beta)
+        if val > max_val:
+            max_val = val
+            best_branch = group
+        if max_val >= beta:
+            # prune remaining groups
+            remaining = structure[structure.index(group)+1:]
+            for g in remaining:
+                pruned_nodes.extend(g)
+            print(f"Pruning at MAX after {group}")
+            break
+        alpha = max(alpha, max_val)
+        print(f"MAX updated α={alpha}, β={beta}")
+    print(f"\n→ MAX returns {max_val}")
+    return max_val, best_branch
+
+root_value, path = alpha_beta_max(tree_structure, float('-inf'), float('inf'))
+
+print("\n===========================")
+print("Root Node Value (MAX):", root_value)
+print("Best Path (Branch):", path)
+print("Pruned Nodes:", pruned_nodes)
+
+OUTPUT:
+Exploring branch: ['A', 'B', 'C', 'D']
+    MIN checks A=10, α=-inf, β=inf
+    MIN checks B=11, α=-inf, β=10
+    MIN checks C=9, α=-inf, β=10
+    MIN checks D=12, α=-inf, β=9
+    → MIN returns 9
+MAX updated α=9, β=inf
+
+Exploring branch: ['E', 'F', 'G', 'H']
+    MIN checks E=14, α=9, β=inf
+    MIN checks F=15, α=9, β=14
+    MIN checks G=13, α=9, β=14
+    MIN checks H=14, α=9, β=13
+    → MIN returns 13
+MAX updated α=13, β=inf
+
+Exploring branch: ['I', 'J', 'K', 'L']
+    MIN checks I=5, α=13, β=inf
+    Pruning at MIN node after I: ['J', 'K', 'L']
+    → MIN returns 5
+MAX updated α=13, β=inf
+
+Exploring branch: ['M', 'N', 'O', 'P']
+    MIN checks M=3, α=13, β=inf
+    Pruning at MIN node after M: ['N', 'O', 'P']
+    → MIN returns 3
+MAX updated α=13, β=inf
+
+→ MAX returns 13
+
+===========================
+Root Node Value (MAX): 13
+Best Path (Branch): ['E', 'F', 'G', 'H']
+Pruned Nodes: ['J', 'K', 'L', 'N', 'O', 'P']
